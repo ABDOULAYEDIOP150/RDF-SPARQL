@@ -1,0 +1,86 @@
+{
+  "networks": {
+    "demo_broken": {
+      "status": "quarantaine",
+      "metabolites": 2,
+      "reactions": 2,
+      "participants": 4,
+      "with_chebi": 0,
+      "with_metanetx": 0,
+      "errors": [
+        "Participants vers un métabolite inconnu (1)",
+        "Stœchiométries nulles ou négatives (1)"
+      ],
+      "warnings": []
+    },
+    "demo_glycolysis": {
+      "status": "validé",
+      "metabolites": 4,
+      "reactions": 2,
+      "participants": 5,
+      "with_chebi": 4,
+      "with_metanetx": 3,
+      "errors": [],
+      "warnings": [
+        "MNXM3 est porté par plusieurs métabolites : atp_c, glc_c",
+        "MetaNetX mal formé pour pyr_c : 'MNXM under_review'"
+      ]
+    },
+    "e_coli_core": {
+      "status": "validé",
+      "metabolites": 72,
+      "reactions": 95,
+      "participants": 360,
+      "with_chebi": 60,
+      "with_metanetx": 0,
+      "errors": [],
+      "warnings": []
+    },
+    "iJO1366": {
+      "status": "validé",
+      "metabolites": 1805,
+      "reactions": 2583,
+      "participants": 10183,
+      "with_chebi": 1442,
+      "with_metanetx": 1805,
+      "errors": [],
+      "warnings": [
+        "MNXM1627 est porté par plusieurs métabolites : M_2ddglcn_c, M_2dh3dgal_c",
+        "MNXM2246 est porté par plusieurs métabolites : M_metsox_R__L_c, M_metsox_S__L_c",
+        "MNXM2246 est porté par plusieurs métabolites : M_metsox_R__L_e, M_metsox_S__L_e",
+        "MNXM2246 est porté par plusieurs métabolites : M_metsox_R__L_p, M_metsox_S__L_p",
+        "MNXM597 est porté par plusieurs métabolites : M_xylu__D_c, M_xylu__L_c"
+      ]
+    },
+    "iYS1720": {
+      "status": "validé",
+      "metabolites": 2436,
+      "reactions": 3357,
+      "participants": 12557,
+      "with_chebi": 1474,
+      "with_metanetx": 1898,
+      "errors": [],
+      "warnings": [
+        "MNXM15 est porté par plusieurs métabolites : M_nh3_c, M_nh4_c"
+      ]
+    },
+    "yeast_GEM": {
+      "status": "validé",
+      "metabolites": 2748,
+      "reactions": 4105,
+      "participants": 15463,
+      "with_chebi": 2353,
+      "with_metanetx": 2204,
+      "errors": [],
+      "warnings": [
+        "MNXM1083 est porté par plusieurs métabolites : s_4209, s_4210",
+        "MNXM1715 est porté par plusieurs métabolites : s_0279, s_0318, s_0333"
+      ]
+    }
+  },
+  "triples": 135203,
+  "quarantined": [
+    "demo_broken"
+  ],
+  "unreadable": []
+}

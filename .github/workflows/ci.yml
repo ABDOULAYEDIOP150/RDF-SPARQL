@@ -1,0 +1,98 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  # 1. Qualité du code et tests unitaires (bibliothèque kg, API, job Spark sur un mini data lake)
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Installer les dépendances
+        run: pip install -r requirements-dev.txt
+      - name: Lint (ruff)
+        run: ruff check .
+      - name: Tests (pytest)
+        run: pytest -v
+
+  # 2. Pipeline Spark complet sur tout le data lake + analyses GraphFrames
+  spark-pipeline:
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Installer PySpark et GraphFrames
+        run: pip install pyspark==4.0.1 pandas pyarrow rdflib graphframes-py==0.10.0 typing_extensions
+      - name: Job PySpark (data/raw -> build/processed)
+        run: python spark/pipeline_spark.py --raw data/raw --out build/processed
+      - name: Vérifier que les données publiées sont à jour
+        run: |
+          python - <<'EOF'
+          import json, sys
+          new = json.load(open("build/processed/quality/report.json", encoding="utf-8"))
+          old = json.load(open("data/processed/quality/report.json", encoding="utf-8"))
+          print(f"Triplets : {new['triples']} (publiés : {old['triples']})")
+          print("Réseaux en quarantaine :", new["quarantined"])
+          if new != old:
+              sys.exit("data/processed n'est plus à jour : relancer python spark/pipeline_spark.py")
+          EOF
+      - name: Analyses GraphFrames (degrés, motifs, composantes connexes)
+        run: |
+          spark-submit --packages io.graphframes:graphframes-spark4_2.13:0.10.0 \
+            spark/graphframes_analysis.py build/processed/graph
+      - uses: actions/upload-artifact@v4
+        with:
+          name: processed-data
+          path: build/processed
+
+  # 3. Image Docker de l'API : construite, testée, puis publiée sur ghcr.io (branche main)
+  docker-api:
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Nom de l'image en minuscules
+        run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}-api" >> "$GITHUB_ENV"
+      - name: Construire l'image
+        run: docker build -t "$IMAGE:latest" -t "$IMAGE:${GITHUB_SHA::7}" .
+      - name: Test de fumée du conteneur
+        run: |
+          docker run -d -p 8000:8000 --name api "$IMAGE:latest"
+          for i in $(seq 1 30); do curl -sf localhost:8000/health && break; sleep 2; done
+          curl -sf "localhost:8000/networks/e_coli_core/path?source=M_glc__D_e&target=M_succ_e" | head -c 300
+          docker logs api | tail -5
+      - name: Publier sur GitHub Container Registry
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker push "$IMAGE:latest"
+          docker push "$IMAGE:${GITHUB_SHA::7}"
+
+# Déploiement de l'app : Streamlit Community Cloud est relié au dépôt et redéploie
+# automatiquement à chaque push sur main.

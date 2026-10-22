@@ -1,0 +1,7 @@
+# Développement : app + API + Spark + tests
+-r requirements.txt
+-r requirements-api.txt
+pyspark==4.0.1
+pytest>=8
+httpx>=0.27
+ruff>=0.6

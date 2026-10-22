@@ -1,0 +1,25 @@
+[project]
+name = "metabolic-kg-explorer"
+version = "1.0.0"
+description = "Réseaux métaboliques SBML -> graphe de connaissances RDF/SPARQL (PySpark, Streamlit, FastAPI)"
+requires-python = ">=3.10"
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E731"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["kg", "api"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff.lint.per-file-ignores]
+# longues chaînes SPARQL / Graphviz : plus lisibles sur une ligne
+"kg/rdf.py" = ["E501"]
+"app.py" = ["E501"]

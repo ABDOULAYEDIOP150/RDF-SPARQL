@@ -1,3 +1,6 @@
+# Application Streamlit (utilisé par Streamlit Cloud)
 streamlit>=1.40
 pandas>=2.0
+pyarrow>=14
 rdflib>=7.0
+networkx>=3.2

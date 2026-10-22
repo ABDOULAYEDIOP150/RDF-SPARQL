@@ -1,0 +1,7 @@
+.git
+data/raw
+tests
+spark
+build
+__pycache__
+*.pyc

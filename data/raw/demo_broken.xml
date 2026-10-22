@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Réseau volontairement cassé : une réaction pointe vers un métabolite inexistant
+     et une stœchiométrie est négative. Le job Spark doit le mettre en quarantaine. -->
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
+  <model id="demo_broken" name="Reseau casse (test qualite)">
+    <listOfSpecies>
+      <species id="a_c" name="Molecule A" compartment="c"/>
+      <species id="b_c" name="Molecule B" compartment="c"/>
+    </listOfSpecies>
+    <listOfReactions>
+      <reaction id="R_AB" name="A vers B" reversible="false">
+        <listOfReactants><speciesReference species="a_c" stoichiometry="1"/></listOfReactants>
+        <listOfProducts><speciesReference species="b_c" stoichiometry="-1"/></listOfProducts>
+      </reaction>
+      <reaction id="R_BX" name="B vers X inconnu" reversible="false">
+        <listOfReactants><speciesReference species="b_c" stoichiometry="1"/></listOfReactants>
+        <listOfProducts><speciesReference species="x_c" stoichiometry="1"/></listOfProducts>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

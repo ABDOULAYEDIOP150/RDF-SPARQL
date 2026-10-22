@@ -1,0 +1,7 @@
+# API FastAPI (image Docker)
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pandas>=2.0
+pyarrow>=14
+rdflib>=7.0
+networkx>=3.2
