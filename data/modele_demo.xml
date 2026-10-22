@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+  <model id="demo_glycolysis" name="Glycolyse ultra-simplifiee">
+    <listOfCompartments>
+      <compartment id="c" name="cytosol" constant="true"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="glc_c" name="Glucose" compartment="c" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false">
+        <annotation><rdf:RDF><rdf:Description rdf:about="#glc_c"><bqbiol:is><rdf:Bag>
+          <rdf:li rdf:resource="https://identifiers.org/chebi/CHEBI:17234"/>
+          <rdf:li rdf:resource="https://identifiers.org/metanetx.chemical/MNXM3"/>
+        </rdf:Bag></bqbiol:is></rdf:Description></rdf:RDF></annotation>
+      </species>
+      <species id="pyr_c" name="Pyruvate" compartment="c" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false">
+        <annotation><rdf:RDF><rdf:Description rdf:about="#pyr_c"><bqbiol:is><rdf:Bag>
+          <rdf:li rdf:resource="https://identifiers.org/chebi/CHEBI:15361"/>
+          <rdf:li rdf:resource="https://identifiers.org/metanetx.chemical/MNXM under_review"/>
+        </rdf:Bag></bqbiol:is></rdf:Description></rdf:RDF></annotation>
+      </species>
+      <species id="lac_c" name="Lactate" compartment="c" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false">
+        <annotation><rdf:RDF><rdf:Description rdf:about="#lac_c"><bqbiol:is><rdf:Bag>
+          <rdf:li rdf:resource="https://identifiers.org/chebi/CHEBI:24996"/>
+        </rdf:Bag></bqbiol:is></rdf:Description></rdf:RDF></annotation>
+      </species>
+      <species id="atp_c" name="ATP" compartment="c" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false">
+        <annotation><rdf:RDF><rdf:Description rdf:about="#atp_c"><bqbiol:is><rdf:Bag>
+          <rdf:li rdf:resource="https://identifiers.org/chebi/CHEBI:15422"/>
+          <rdf:li rdf:resource="https://identifiers.org/metanetx.chemical/MNXM3"/>
+        </rdf:Bag></bqbiol:is></rdf:Description></rdf:RDF></annotation>
+      </species>
+    </listOfSpecies>
+    <listOfReactions>
+      <reaction id="R_HEX1" name="Glucose vers pyruvate (simplifié)" reversible="false">
+        <listOfReactants>
+          <speciesReference species="glc_c" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pyr_c" stoichiometry="2" constant="true"/>
+          <speciesReference species="atp_c" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+      <reaction id="R_LDH" name="Pyruvate vers lactate" reversible="true">
+        <listOfReactants>
+          <speciesReference species="pyr_c" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="lac_c" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>
